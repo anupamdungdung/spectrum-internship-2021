@@ -12,7 +12,7 @@ const AppStack = () => {
 
         <Stack.Screen name="ToDoScreen" component={ToDoScreen} options={{
             title: 'To Do App', headerTitleAlign: 'center', headerStyle: {
-                backgroundColor: "#1ABC9C"
+                backgroundColor: "#d68f7e"
             }, headerTintColor: '#fff',
             headerRight:()=>{
                 <Icon.ArrowLeft width={25} height={25} fill="black"/>

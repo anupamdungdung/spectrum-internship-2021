@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, FlatList, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, FlatList, ToastAndroid, Keyboard, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { onSnapshot, addDoc, removeDoc, updateDoc} from '../services/collections';
+import { onSnapshot, addDoc, removeDoc, updateDoc } from '../services/collections';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore'
 import ToDoItem from '../components/ToDoItem';
+import image from '../assets/images/appBackground.png'
 
 
-const user=auth().currentUser
+
+
+const user = auth().currentUser
 
 const showToast = (msg) => {
     return ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
@@ -18,12 +21,17 @@ const ToDoScreen = () => {
 
     const [todoItems, setToDoItems] = useState([]);
     const [newItem, setNewItem] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [emptyTextField, setEmptyTextField] = useState(`${newItem}`);
     //Reference to Firestore Database
     const toDoItemsRef = firestore().collection('users').doc(auth().currentUser.uid).collection('toDoItems');
     var unsubscribe;
-    
+
     useEffect(() => {
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
         onSnapshot(toDoItemsRef, (newToDoItems) => {
             setToDoItems(newToDoItems);
         }, {
@@ -37,9 +45,9 @@ const ToDoScreen = () => {
                 return 0;
             }
         });
-        unsubscribe=toDoItemsRef.onSnapshot(()=>{
+        unsubscribe = toDoItemsRef.onSnapshot(() => {
 
-        })       
+        })
     }, [])
 
     const { logout } = useContext(AuthContext);
@@ -52,8 +60,9 @@ const ToDoScreen = () => {
         else {
             // todoItems.push(item);
             // setToDoItems([...todoItems]);
-            addDoc(toDoItemsRef,item)
+            addDoc(toDoItemsRef, item)
             setNewItem('');
+            Keyboard.dismiss();
 
         }
 
@@ -84,6 +93,7 @@ const ToDoScreen = () => {
 
     return (
         <View style={styles.container}>
+            <ImageBackground source={image} resizeMode="cover" style={styles.bgimage}>
             <View style={styles.todoEnter}>
                 <TextInput placeholder="Enter a Task"
                     onSubmitEditing={() => { }}
@@ -97,26 +107,26 @@ const ToDoScreen = () => {
             <View style={styles.toDolist}>
                 <FlatList
                     data={todoItems}
-                    renderItem={({ item: { id,text, isChecked }, index }) => {
+                    renderItem={({ item: { id, text, isChecked }, index }) => {
                         return <ToDoItem text={text} isChecked={isChecked} onChecked={() => {
                             const toDoItem = todoItems[index];
                             toDoItem.isChecked = !isChecked;
                             updateItemToList(index, toDoItem);
 
-                            const item={text,isChecked:!isChecked};
-                            if(id){
-                                item.id=id;
+                            const item = { text, isChecked: !isChecked };
+                            if (id) {
+                                item.id = id;
                             }
-                            addDoc(toDoItemsRef,item);
+                            addDoc(toDoItemsRef, item);
 
                         }} onChangeText={(newText) => {
-                            const toDoItem = todoItems[index]; 
+                            const toDoItem = todoItems[index];
                             toDoItem.text = newText;
                             updateItemToList(index, toDoItem);
 
                         }} onDelete={() => {
                             removeItemsFromLists(index);
-                            id && removeDoc(toDoItemsRef,id);
+                            id && removeDoc(toDoItemsRef, id);
                         }} />
 
                     }}>
@@ -137,9 +147,11 @@ const ToDoScreen = () => {
                 </TouchableOpacity>
             </View>
 
+            </ImageBackground>
+            
+
         </View>
     )
-
 }
 
 const styles = StyleSheet.create({
@@ -183,7 +195,7 @@ const styles = StyleSheet.create({
     },
     addButton: {
         margin: 5,
-        backgroundColor: '#1ABC9C',
+        backgroundColor: '#d68f7e',
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
@@ -192,7 +204,14 @@ const styles = StyleSheet.create({
     },
     toDolist: {
         flex: 1,
-        backgroundColor: "#EF9A9A",
+        
+    },
+    
+    bgimage:{
+        width:'100%',
+        flex:1,
+        
+        
     }
 
 })

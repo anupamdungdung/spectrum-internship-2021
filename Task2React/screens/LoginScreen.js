@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity ,ToastAndroid} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ToastAndroid, Keyboard, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import { AuthContext } from '../navigation/AuthProvider';
+import image from '../assets/images/appBackground.png'
 
 const isValidObjField = (obj) => {
     return Object.values(obj).every(value => value.trim());
@@ -26,7 +27,7 @@ const LoginScreen = ({ navigation }) => {
 
     const { login } = useContext(AuthContext);
 
-    const {email,password} =data;
+    const { email, password } = data;
 
     const isValidForm = () => {
         //Accept only if all the fields have value
@@ -37,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
         // //Password must have 8 or more characters
         else if (!password.trim() || password.length < 8) showToast('Password should be more than 8 characters!')
         // //Password and confirm password must be the same
-        else{
+        else {
             return true;
         }
         return false;
@@ -49,7 +50,8 @@ const LoginScreen = ({ navigation }) => {
 
     const submitForm = () => {
         if (isValidForm()) {
-            login(email.trim(), password.trim())
+            Keyboard.dismiss();
+            login(email.trim().toLowerCase(), password.trim())
         }
 
     }
@@ -57,44 +59,48 @@ const LoginScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Animatable.Text style={styles.loginHead} animation="fadeInUpBig">Welcome!</Animatable.Text>
-            <Animatable.View style={styles.loginCard} animation="fadeInUpBig">
-                <Text style={styles.cardHeadingText}>E-Mail</Text>
-                <View style={styles.action}>
+            <ImageBackground source={image} resizeMode="cover" style={styles.bgimage}>
+                <Animatable.Text style={styles.loginHead} animation="fadeInUpBig">Welcome!</Animatable.Text>
+                <Animatable.View style={styles.loginCard} animation="fadeInUpBig">
+                    <Text style={styles.cardHeadingText}>E-Mail</Text>
+                    <View style={styles.action}>
 
-                    <TextInput placeholder="E-mail" style={styles.textInput}
-                        onChangeText={(val) => handleOnChangeText(val, 'email')}
-                        autoCapitalize="none" />
+                        <TextInput placeholder="E-mail" style={styles.textInput}
+                            onChangeText={(val) => handleOnChangeText(val, 'email')}
+                            autoCapitalize="none" />
 
-                </View>
-                <Text style={styles.cardHeadingText}>Password</Text>
-                <View style={styles.action}>
-                    <TextInput placeholder="Password" style={styles.textInput} secureTextEntry={true} onChangeText={(val) => handleOnChangeText(val, 'password')} autoCapitalize="none" />
+                    </View>
+                    <Text style={styles.cardHeadingText}>Password</Text>
+                    <View style={styles.action}>
+                        <TextInput placeholder="Password" style={styles.textInput} secureTextEntry={true} onChangeText={(val) => handleOnChangeText(val, 'password')} autoCapitalize="none" />
 
-                </View>
+                    </View>
 
-            </Animatable.View>
-            <Animatable.View animation="fadeInUpBig" style={styles.button}>
-                <TouchableOpacity onPress={submitForm} >
-                    <LinearGradient
-                        colors={['#00B4DB', '#0083B0']}
-                        style={styles.customButton}>
-                        <Text style={styles.buttonText}>LOGIN</Text>
+                </Animatable.View>
+                <Animatable.View animation="fadeInUpBig" style={styles.button}>
+                    <TouchableOpacity onPress={submitForm} >
+                        <LinearGradient
+                            colors={['#00B4DB', '#0083B0']}
+                            style={styles.customButton}>
+                            <Text style={styles.buttonText}>LOGIN</Text>
 
-                    </LinearGradient>
-                </TouchableOpacity>
-            </Animatable.View>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </Animatable.View>
 
-            <Animatable.View animation="fadeInUpBig" style={styles.button}>
-                <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")} >
-                    <LinearGradient
-                        colors={['#00B4DB', '#0083B0']}
-                        style={styles.customButton}>
-                        <Text style={styles.buttonText}>New User? Create an Account</Text>
+                <Animatable.View animation="fadeInUpBig" style={styles.button}>
+                    <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")} >
+                        <LinearGradient
+                            colors={['#00B4DB', '#0083B0']}
+                            style={styles.customButton}>
+                            <Text style={styles.buttonText}>New User? Create an Account</Text>
 
-                    </LinearGradient>
-                </TouchableOpacity>
-            </Animatable.View>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </Animatable.View>
+
+            </ImageBackground>
+
 
 
 
@@ -135,13 +141,18 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         padding: 20,
         margin: 20,
-        width: '80%',
-        borderRadius: 5
+        width: '90%',
+        borderRadius: 5,
+        justifyContent:'center',
+        textAlign:'center'
+    
+
     },
     loginHead: {
         fontSize: 40,
         fontWeight: "bold",
-        fontFamily: "AntDesign"   
+        fontFamily: "AntDesign",
+        textAlign:"center"
 
     },
     cardHeadingText: {
@@ -166,6 +177,11 @@ const styles = StyleSheet.create({
         textAlign: "center",
         justifyContent: "center",
         alignItems: "center",
+    },
+    bgimage:{
+        width:'100%',
+        flex:1,
+        justifyContent: "center"
     }
 
 

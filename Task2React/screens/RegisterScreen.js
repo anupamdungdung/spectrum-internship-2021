@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ToastAndroid ,ImageBackground} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { AuthContext } from '../navigation/AuthProvider';
+import image from '../assets/images/appBackground.png'
+
 
 const isValidObjField = (obj) => {
     return Object.values(obj).every(value => value.trim());
@@ -60,6 +62,7 @@ const RegisterScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <ImageBackground source={image} resizeMode="cover" style={styles.bgimage}>
             <Text style={styles.loginHead}>SIGN UP</Text>
             <View style={styles.loginCard}>
                 <Text style={styles.cardHeadingText}>E-Mail</Text>
@@ -93,6 +96,10 @@ const RegisterScreen = ({ navigation }) => {
 
                 </LinearGradient>
             </TouchableOpacity>
+
+            </ImageBackground>
+            
+            
 
         </View>
     )
@@ -151,6 +158,12 @@ const styles = StyleSheet.create({
     action: {
         flexDirection: "row",
         marginBottom: 10,
+    },
+    bgimage:{
+        width:'100%',
+        flex:1,
+        justifyContent: "center",
+        alignItems:'center'
     }
 
 })

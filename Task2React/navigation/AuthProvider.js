@@ -21,10 +21,16 @@ export const AuthProvider = ({ children }) => {
                 login: async (email, password) => {
                     try {
                         await auth().signInWithEmailAndPassword(email, password);
+                        showToast('Login Successful!')
+
                     }
                     catch (e) {
+                        console.log(e);
                         if (e.code === 'auth/user-not-found') {
                             showToast('User does not exist!');
+                        }
+                        if(e.code === 'auth/wrong-password'){
+                            showToast('Incorrect password');
                         }
                     }
                 },
@@ -32,7 +38,7 @@ export const AuthProvider = ({ children }) => {
                     try {
                         await auth().createUserWithEmailAndPassword(email, password).then(({user}) => {
                             firestore().collection("users").doc(user.uid).set({});
-                            showToast('Registration Successful!')
+                            showToast('Registration Successful!');
                             
                         });
                         
