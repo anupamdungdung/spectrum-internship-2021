@@ -8,4 +8,6 @@ Year: 4th Year
 
 Please Note!!!
 
+Reagarding Final Task:
+
 Although I tried to implement all of the tasks that were given I couldn't complete all of them, but tried to integrate as much functions I could. The APK of the app is attached herewith. 
